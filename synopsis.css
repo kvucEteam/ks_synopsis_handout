@@ -1,0 +1,73 @@
+
+h1 {
+	margin-left: 15px;
+}
+
+textarea {
+    border: 1px solid #ccc;
+    padding: 6px 12px;
+    width: 100%;
+}
+
+.input-group input  {
+	color: #000;
+}
+
+.textindent{
+	padding-left: 32px;
+	clear: both;
+}
+
+.studentInput{
+	width: 100%;
+}
+
+
+.bootAjust .col-md-4 {
+	padding-left: 0px;
+	padding-right: 0px;
+	margin-bottom: 5px;
+}
+
+.bootAjust .col-xs-12 {
+	padding-left: 0px;
+	padding-right: 0px;
+	margin-bottom: 5px;
+}
+
+.bootAjust.col-md-4:first-child{
+	padding-right: 5px;
+}
+
+/*
+.bibliographyWrap .studentInputSmall{ 
+	width: 32%;
+	margin-right: 10px;
+}
+*/
+
+.bibliographyWrap .input-group {
+	display: inherit;
+}
+
+
+.input-group {
+	display: flex;
+	margin-bottom: 5px;
+}
+
+.glyphLi {
+	margin-left: 10px;
+	margin-right: 10px;
+	padding-top: 10px;
+}
+
+.Clear, .clear{
+    clear: both;
+}
+
+.glyphicons {
+
+    margin-right: 14px;
+    margin-top: 1px;
+}
