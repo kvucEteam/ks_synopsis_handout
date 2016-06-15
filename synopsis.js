@@ -318,7 +318,7 @@ function wordTemplate() {
 	HTML +=				'.spacer{}';
 	HTML += 		'</style>';
 	HTML += 	'</head>';
-	HTML += 	'<body>';
+	HTML += 	'<body>'; 
 	HTML += 		'<h1>'+obj.titel+'</h1>';
 
 	HTML += 		'<h3>Indledning</h3>';
