@@ -110,7 +110,7 @@ function returnLastStudentSession() {
 
 function template() {
 
-	console.log('TEST: ' + JSON.stringify(Array(6).join('a b c;').split(';')));
+	// console.log('TEST: ' + JSON.stringify(Array(6).join('a b c;').split(';')));
 
 	var titelIndex = 1;
 	var HTML = '';
@@ -159,7 +159,7 @@ function template() {
 	// HTML += 		'<h2>Titel, indledning og problemformulering</h2>';
 	HTML += 		'<div class="textindent">';
 	HTML += 			'<h3>Emne</h3>';
-	HTML += 			returnInputBoxes4(1, 'studentTheme studentInput', obj.theme, 'Skriv din theme her...');
+	HTML += 			returnInputBoxes4(1, 'studentTheme studentInput', obj.theme, 'Skriv dit emne her...');
 	HTML += 			'<h3>Indledning</h3>';
 	HTML += 			'<textarea id="introduction" class="studentInput" value="'+obj.introduction+'" placeholder="Skriv din indledning her...">'+obj.introduction+'</textarea>';
 	HTML += 		'</div>';
@@ -193,6 +193,9 @@ function template() {
 
 					++titelIndex;
 	HTML += 		'<h2>'+titelIndex+'. Besvarelse af underspørgsmål</h2>';
+	HTML += 		'<div class="textindent">';
+	HTML += 			'Du skal besvare dine underspørgsmål ved hjælp af viden fra de 3 fag og ved hjælp af inddragelse af bilagsmaterialet!';
+	HTML += 		'</div>';
 
 	HTML += 		'<div class="subQuestionWrapContainer">';
 						var savedValArr = [];
@@ -211,6 +214,9 @@ function template() {
 
 					++titelIndex;
 	HTML += 		'<h2>'+titelIndex+'. Konklusion (ikke stikordsform)</h2>';
+	HTML += 		'<p>';
+	HTML += 			'Du skal skrive konklusionen som en sammenhængende tekst - ikke i stikordsform.';
+	HTML += 		'</p>';
 	HTML += 		'<textarea id="conclusion" class="studentInput" value="'+obj.conclusion+'" placeholder="Skriv din konklusion her...">'+obj.conclusion+'</textarea>';
 
 					++titelIndex;
@@ -249,11 +255,19 @@ function template() {
 
 $( document ).on('click', "#addNewSubQuestion", function(event){
 	var numOfSubQuestions = $('.subQuestion').length;
-	$('.subQuestionInput').append(returnInputBoxes4(1, 'subQuestion starMark studentInput', '', replaceWildcard('Skriv dit ??? underspørgsmål her...', numOfSubQuestions+1)));
-	$('.subQuestionInput .starMark').last().before('<span class="glyphLi glyphicon glyphicon-asterisk"></span>');
+	console.log('addNewSubQuestion - numOfSubQuestions: ' + numOfSubQuestions);
+	if (numOfSubQuestions < 10) {
+		if (numOfSubQuestions > 4) {
+			UserMsgBox("body", '<h4>OBS</h4> <p>En synopsis bør kun indeholde 3-5 underspørgsmål.</p>');
+		}
+		$('.subQuestionInput').append(returnInputBoxes4(1, 'subQuestion starMark studentInput', '', replaceWildcard('Skriv dit ??? underspørgsmål her...', numOfSubQuestions+1)));
+		$('.subQuestionInput .starMark').last().before('<span class="glyphLi glyphicon glyphicon-asterisk"></span>');
 
-	$('.subQuestionWrapContainer').append(answersToSubQuestions(numOfSubQuestions+1, 'subQuestionAnswer starMark studentInput', '', [''], ['Skriv din besvarelse her...']));
-	$('.subQuestionWrapContainer .starMark').last().before('<span class="glyphLi glyphicon glyphicon-asterisk"></span>');
+		$('.subQuestionWrapContainer').append(answersToSubQuestions(numOfSubQuestions+1, 'subQuestionAnswer starMark studentInput', '', [''], ['Skriv din besvarelse her...']));
+		$('.subQuestionWrapContainer .starMark').last().before('<span class="glyphLi glyphicon glyphicon-asterisk"></span>');
+	} else {
+		UserMsgBox("body", '<h4>OBS</h4> <p>Du kan ikke tilføje mere end 10 underspørgsmål!</p>');
+	}
 });
 
 
@@ -273,7 +287,7 @@ function answersToSubQuestions(indexNo, classes, savedSubQuestion, savedValArr, 
 	// HTML += 	'<h2>Underspørgsmål '+indexNo+'</h2>';
 	HTML += 	'<div class="textindent">';
 	HTML += 		'<h3 class="subQuestionHeading">'+((savedSubQuestion.length > 0)?savedSubQuestion:'Underspørgsmål '+indexNo)+'</h3>';
-	HTML += 		'<h3>Besvarelser</h3>';
+	HTML += 		'<h4>Besvarelser</h4>';
 	HTML += 		'<div class="answerWrapContainer">';
 	HTML += 			returnInputBoxes4(savedValArr.length, classes, savedValArr, placeholderTextArr);
 	HTML += 		'</div>';
@@ -321,7 +335,11 @@ $( document ).on('keyup', ".subQuestion", function(event){  // "keyup" instead o
 	var index = $(this).parent().index();
 	var txt = $(this).val();
 	console.log("keyup - subQuestion - index: " + index + ", txt: " + txt + ", $(this).parent().class: " + $(this).parent().attr('class'));
-	$('.subQuestionHeading').eq(index).text(txt);
+	if (txt.length > 0) {
+		$('.subQuestionHeading').eq(index).text(txt);
+	} else {
+		$('.subQuestionHeading').eq(index).text('Underspørgsmål '+String(index+1));
+	}
 });
 
 
@@ -519,9 +537,6 @@ function wordTemplate() {
 
 
 
-// osc.save('jsonData', jsonData);
-
-
 $( document ).on('focusout', "textarea", function(event){ 
 	saveJsonData();
 	osc.save('jsonData', jsonData);
@@ -533,6 +548,15 @@ $( document ).on('focusout', "input", function(event){
 	osc.save('jsonData', jsonData);
 	console.log('focusout - input - jsonData: ' + JSON.stringify(jsonData));
 });
+
+
+$( window ).unload(function() {   // <---------------  This saves data if the page is closed or reloaded.
+	saveJsonData();
+	osc.save('jsonData', jsonData);
+	console.log('unload - jsonData: ' + JSON.stringify(jsonData));
+	// confirm('unload - jsonData: ' + JSON.stringify(jsonData));
+});
+
 
 
 

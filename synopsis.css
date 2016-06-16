@@ -53,7 +53,7 @@ textarea {
 
 .input-group {
 	display: flex;
-	margin-bottom: 5px;
+	margin-bottom: 10px;
 }
 
 .glyphLi {
@@ -70,4 +70,14 @@ textarea {
 
     margin-right: 14px;
     margin-top: 1px;
+}
+
+
+#addNewBibMandatory, #addNewBibOptional {
+	margin-top: 20px;
+	margin-left: 32px;
+}
+
+.addNewSubQuestionAnswer, #addNewSubQuestion {
+	margin-top: 10px;
 }
