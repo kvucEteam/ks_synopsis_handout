@@ -35,7 +35,7 @@ function returnLastStudentSession() {
 
 		window.safariUserHasAgreed = false;
 
-		UserMsgBox("body", '<h4>OBS</h4> <p>Du arbejder på en Mac og bruger browseren Safari. <br> Denne øvelse virker desværre ikke optimalt på Safari-platformen. Du vil ikke kunne downloade wordfilen til sidst i øvelsen.</p><br> <p>Brug i stedet <b>Chrome</b> (<a href="https://www.google.dk/chrome/browser/desktop/">Hent den her</a>) eller <b>Firefox</b>  (<a href="https://www.mozilla.org/da/firefox/new/">Hent den her</a>).</p><br> <p>Mvh <a href="https://www.vucdigital.dk">vucdigital.dk</a> </p>');
+		UserMsgBox("body", '<h4>OBS</h4> <p>Du arbejder på en Mac og bruger browseren Safari. <br> Denne øvelse virker desværre ikke optimalt på Safari-platformen. Du vil ikke kunne downloade de udfyldte felter som wordfil til sidst i øvelsen.</p><br> <p>Brug i stedet <b>Chrome</b> (<a href="https://www.google.dk/chrome/browser/desktop/">Hent den her</a>) eller <b>Firefox</b>  (<a href="https://www.mozilla.org/da/firefox/new/">Hent den her</a>).</p><br> <p>Mvh <a href="https://www.vucdigital.dk">vucdigital.dk</a> </p>');
 		
 		$('#UserMsgBox').addClass('UserMsgBox_safari');
 		$('.MsgBox_bgr').addClass('MsgBox_bgr_safari');
@@ -112,7 +112,8 @@ function template() {
 
 	// console.log('TEST: ' + JSON.stringify(Array(6).join('a b c;').split(';')));
 
-	var titelIndex = 1;
+	var titelIndex = 0;
+	var titelLetter = ['A','B','C','D','E','F','G','H','I','j','K'];
 	var HTML = '';
 
 	console.log('template - jsonData 1: ' + JSON.stringify(jsonData)); 
@@ -155,7 +156,7 @@ function template() {
 	HTML += '<div class="col-xs-12 col-md-8">'+instruction(jsonData.instruction)+'</div><div class="clear"></div>';
 	HTML += '<div class="row">';
 	HTML += 	'<div class="col-xs-12 col-md-12">';
-	HTML += 		'<h2>'+titelIndex+'. Emne og indledning</h2>';
+	HTML += 		'<h2>'+titelLetter[titelIndex]+'. Emne og indledning</h2>';
 	// HTML += 		'<h2>Titel, indledning og problemformulering</h2>';
 	HTML += 		'<div class="textindent">';
 	HTML += 			'<h3>Emne</h3>';
@@ -165,7 +166,7 @@ function template() {
 	HTML += 		'</div>';
 
 					++titelIndex;
-	HTML += 		'<h2>'+titelIndex+'. Problemformulering og underspørgsmål</h2>';
+	HTML += 		'<h2>'+titelLetter[titelIndex]+'. Problemformulering og underspørgsmål</h2>';
 	HTML += 		'<div class="textindent">';
 	HTML += 			'<h3>Problemformulering</h3>';
 	HTML += 			'<textarea id="problemformulation" class="studentInput" value="'+obj.problemformulation+'" placeholder="Skriv din problemformulering her...">'+obj.problemformulation+'</textarea>';
@@ -192,7 +193,7 @@ function template() {
 	HTML += 		'</div>';
 
 					++titelIndex;
-	HTML += 		'<h2>'+titelIndex+'. Besvarelse af underspørgsmål</h2>';
+	HTML += 		'<h2>'+titelLetter[titelIndex]+'. Besvarelse af underspørgsmål</h2>';
 	HTML += 		'<div class="textindent">';
 	HTML += 			'Du skal besvare dine underspørgsmål ved hjælp af viden fra de 3 fag og ved hjælp af inddragelse af bilagsmaterialet!';
 	HTML += 		'</div>';
@@ -213,14 +214,14 @@ function template() {
 	HTML += 		'</div>';
 
 					++titelIndex;
-	HTML += 		'<h2>'+titelIndex+'. Konklusion (ikke stikordsform)</h2>';
-	HTML += 		'<p>';
-	HTML += 			'Du skal skrive konklusionen som en sammenhængende tekst - ikke i stikordsform.';
-	HTML += 		'</p>';
-	HTML += 		'<textarea id="conclusion" class="studentInput" value="'+obj.conclusion+'" placeholder="Skriv din konklusion her...">'+obj.conclusion+'</textarea>';
+	HTML += 		'<h2>'+titelLetter[titelIndex]+'. Konklusion</h2>';
+	// HTML += 		'<p>';
+	// HTML += 			'Du skal skrive konklusionen som en sammenhængende tekst - ikke i stikordsform.';
+	// HTML += 		'</p>';
+	HTML += 		'<textarea id="conclusion" class="studentInput" value="'+obj.conclusion+'" placeholder="Besvar din problemformulering ved hjælp af en opsummering af dine svar på de enkelte underspørgsmål. Du skal skrive konklusionen som en sammenhængende tekst - ikke i stikordsform.">'+obj.conclusion+'</textarea>';
 
 					++titelIndex;
-	HTML += 		'<h2>'+titelIndex+'. Oversigt over anvendt materiale</h2>';
+	HTML += 		'<h2>'+titelLetter[titelIndex]+'. Oversigt over anvendt materiale</h2>';
 
 	HTML += 		'<h3>Det udleverede bilagsmateriale</h3>';
 	HTML += 		'<div class="bibMandatory">';
@@ -230,7 +231,7 @@ function template() {
 	HTML += 		'</div>';
 	HTML += 		'<span id="addNewBibMandatory" class="btn btn-info"><span class="glyphicons glyphicons-plus"></span>Tilføj kilde</span>';
 
-	HTML += 		'<h3>De selvfundende bilag</h3>';
+	HTML += 		'<h3>De selvfundne bilag</h3>';
 	HTML += 		'<div class="bibOptional">';
 						for (var i in obj.bibliography.optional) {
 	HTML += 				bibliography(parseInt(i)+1, obj.bibliography.optional[i]);
@@ -380,7 +381,7 @@ function saveJsonData(){
 	$( ".subQuestionWrap" ).each(function( index1, element1 ) {
 		// var subObj = {subQuestion: $('.subQuestion',element1).val(), answers: []};  // subQuestionHeading
 		var subQuestionHeading = $('.subQuestionHeading',element1).text();
-		var subQuestionTxt = (subQuestionHeading.indexOf('Underspørgsmål ') === -1)?subQuestionHeading:'';
+		var subQuestionTxt = (subQuestionHeading.indexOf('Underspørgsmål ') === -1)?subQuestionHeading:'';  // <---- Not a good way of testing - consider useing regex match
 		var subObj = {subQuestion: subQuestionTxt, answers: []};
 		$( ".subQuestionAnswer", element1 ).each(function( index2, element2 ) {
 			subObj.answers.push($(element2).val());
@@ -447,7 +448,7 @@ function wordTemplate() {
 	HTML += 			'h5 {}';
 	HTML += 			'h6 {}';
 	HTML += 			'.selected {color: #56bfc5; width: 25%}';
-	HTML += 			'p {font-size: 14px; margin-bottom: 5px}';
+	HTML += 			'p {font-size: 1.2em; margin-bottom: 5px}';
 	HTML += 			'table {width:95%; margin-left:12px}';
 	HTML += 			'td {padding:10px 10px 10px 10px}';
 	HTML += 			'ol {color: #000}';
@@ -466,19 +467,19 @@ function wordTemplate() {
 	HTML += 		'<h3>Problemformulering</h3>';
 	HTML += 		'<p>'+obj.problemformulation+'</p>';
 
-	HTML += 		'<h3>Problemstillinger</h3>';
-	HTML += 		'<ul>';
+	HTML += 		'<h3>Underspørgsmål</h3>';
+	HTML += 		'<ol>';
 					for (var n in obj.subQuestions){
 						var subQuestion = obj.subQuestions[n].subQuestion;
 	HTML += 			(subQuestion.length > 0)? '<li>'+subQuestion+'</li>':'';
 					}
-	HTML += 		'</ul>';
+	HTML += 		'</ol>';
 
-	HTML += 		'<h3>Besvarelse af problemstillingerne</h3>';
+	HTML += 		'<h3>Besvarelse af underspørgsmål</h3>';
 					for (var n in obj.subQuestions){
 						var subQuestion = obj.subQuestions[n].subQuestion;
 						if (subQuestion.length > 0){
-	HTML +=					subQuestion;			
+	HTML +=					String(parseInt(n)+1)+'. '+subQuestion;			
 	HTML += 				'<ul>';
 							for (var m in obj.subQuestions[n].answers){
 								var answer = obj.subQuestions[n].answers[m];
@@ -505,7 +506,7 @@ function wordTemplate() {
 					}
 
 					count = 1;
-	HTML += 		'<h3>De selvfundende bilag</h3>';
+	HTML += 		'<h3>De selvfundne bilag</h3>';
 					for (var n in obj.bibliography.optional){
 						var bib = obj.bibliography.optional[n];
 	HTML += 			(bib.source.length > 0)?'<b>Kilde '+count+': </b>'+bib.source+'<br>':'';
@@ -519,8 +520,8 @@ function wordTemplate() {
 	HTML += 		'<table class="checkQuestion">';
 	HTML += 			'<tr><td><p><b>Rød tråd:</b> Hænger hoved- og underspørgsmål sammen? Dvs. besvares hovedspørgsmålet med underspørgsmålene? Og er der en sammenhæng mellem underspørgsmålene?</p>';
 	HTML += 			'<p><b>Taksonomi:</b> Lægger hovedspørgsmålet op til undersøgelse, diskussion og vurdering (ikke kun redegørelse)?</p>';
-	HTML += 			'<p><b>Anvendelse af materiale:</b> Lægger spørgsmålene op til at inddrage bilagene i besvarelsen?</p>';
-	HTML += 			'<p><b>Tværfaglighed:</b> Kan viden fra alle tre fag inddrages i besvarelsen af problemformuleringen?</p></td></tr>';
+	HTML += 			'<p><b>Tværfaglighed:</b> Kan viden fra alle tre fag inddrages i besvarelsen af problemformuleringen?</p>';
+	HTML += 			'<p><b>Anvendelse af materiale:</b> Lægger spørgsmålene op til at inddrage bilagene i besvarelsen?</p></td></tr>';
 	HTML += 		'</table>';
 
 	// HTML += 		'<div class="spacer">&nbsp;</div>'
