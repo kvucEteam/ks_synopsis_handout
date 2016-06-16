@@ -120,21 +120,30 @@ function template() {
 	if (!jsonData.hasOwnProperty("templateData")){ 
 		console.log('template - templateData - NOT FOUND ');
 
-		jsonData.templateData = {titel: '', 
+		jsonData.templateData = {theme: '', 
     							introduction: '', 
     							problemformulation: '', 
     							subQuestions: [
-    								{subQuestion:'',answers:['','','','']},
-    								{subQuestion:'',answers:['','','','']},
-    								{subQuestion:'',answers:['','','','']},
-    								{subQuestion:'',answers:['','','','']}
+    								{subQuestion:'',answers:['']},
+    								{subQuestion:'',answers:['']},
+    								{subQuestion:'',answers:['']},
+    								{subQuestion:'',answers:['']}
     							], 
-    							conclusion: '', 
-    							bibliography: [
-    								{author:'',source:'',year:'',title:'',characterization:''},
-    								{author:'',source:'',year:'',title:'',characterization:''},
-    								{author:'',source:'',year:'',title:'',characterization:''}
-    							]};
+    							conclusion: '',
+    							bibliography: {
+    								mandatory: [
+    									{source:'' ,characterization:''},
+    									{source:'' ,characterization:''},
+    									{source:'' ,characterization:''},
+    									{source:'' ,characterization:''},
+    									{source:'' ,characterization:''}
+    								],
+    								optional: [
+    									{source:'' ,characterization:''},
+    									{source:'' ,characterization:''}
+    								]
+    							}
+    						};
     }
 
     var obj = jsonData.templateData;
@@ -146,39 +155,84 @@ function template() {
 	HTML += '<div class="col-xs-12 col-md-8">'+instruction(jsonData.instruction)+'</div><div class="clear"></div>';
 	HTML += '<div class="row">';
 	HTML += 	'<div class="col-xs-12 col-md-12">';
-	HTML += 		'<h2>'+titelIndex+'. Titel, indledning og problemformulering</h2>';
+	HTML += 		'<h2>'+titelIndex+'. Emne og indledning</h2>';
 	// HTML += 		'<h2>Titel, indledning og problemformulering</h2>';
 	HTML += 		'<div class="textindent">';
-	HTML += 			'<h3>Titel</h3>';
-	HTML += 			returnInputBoxes4(1, 'studentTitel studentInput', obj.titel, 'Skriv din titel her...');
+	HTML += 			'<h3>Emne</h3>';
+	HTML += 			returnInputBoxes4(1, 'studentTheme studentInput', obj.theme, 'Skriv din theme her...');
 	HTML += 			'<h3>Indledning</h3>';
 	HTML += 			'<textarea id="introduction" class="studentInput" value="'+obj.introduction+'" placeholder="Skriv din indledning her...">'+obj.introduction+'</textarea>';
-	HTML += 			'<h3>Problemformulering</h3>';
-	HTML += 			'<textarea id="problemformulation" class="studentInput" value="'+obj.problemformulation+'" placeholder="Skriv din problemformulering her...">'+obj.problemformulation+'</textarea>';
 	HTML += 		'</div>';
 
-					var savedValArr = [];
-					var placeholderTextArr = [];
-					for (var i in obj.subQuestions) {
-						titelIndex = parseInt(i)+2;
-						var answers = obj.subQuestions[i].answers;
-						var numOfAns = answers.length;
-						var subQuestion = obj.subQuestions[i].subQuestion;
-						placeholderTextArr = Array(numOfAns+1).join('Skriv din besvarelse her...;').split(';');
-						placeholderTextArr.pop();
-						console.log('template - i: '+i+', placeholderTextArr: ' + JSON.stringify(placeholderTextArr));
-	HTML += 			subQuestionsAndAnswers(titelIndex, 'subQuestionAnswer starMark studentInput', subQuestion, answers, placeholderTextArr);
-					}
+					++titelIndex;
+	HTML += 		'<h2>'+titelIndex+'. Problemformulering og underspørgsmål</h2>';
+	HTML += 		'<div class="textindent">';
+	HTML += 			'<h3>Problemformulering</h3>';
+	HTML += 			'<textarea id="problemformulation" class="studentInput" value="'+obj.problemformulation+'" placeholder="Skriv din problemformulering her...">'+obj.problemformulation+'</textarea>';
+	HTML += 			'<h3>Underspørgsmål</h3>';
+	HTML += 			'<div class="subQuestionInput">';
+							var savedValArr = [];
+							var placeholderTextArr = [];
+							for (var i in obj.subQuestions) {
+								// titelIndex = parseInt(i)+2;
+								// var answers = obj.subQuestions[i].answers;
+								// var numOfAns = answers.length;
+								savedValArr.push(obj.subQuestions[i].subQuestion);
+								placeholderTextArr = Array(savedValArr.length+1).join('Skriv dit ??? underspørgsmål her...;').split(';');
+								placeholderTextArr.pop();
+							}
+							console.log('template 1 - i: '+i+', placeholderTextArr: ' + JSON.stringify(placeholderTextArr));
+							for (var n in placeholderTextArr){
+								placeholderTextArr[n] = replaceWildcard(placeholderTextArr[n], parseInt(n)+1);
+							}
+							console.log('template 2 - i: '+i+', placeholderTextArr: ' + JSON.stringify(placeholderTextArr) + ',\nsavedValArr: ' + JSON.stringify(savedValArr));
+	HTML += 				returnInputBoxes4(savedValArr.length, 'subQuestion starMark studentInput', savedValArr, placeholderTextArr);
+	HTML += 			'</div>';
+	HTML += 			'<span id="addNewSubQuestion" class="btn btn-info"><span class="glyphicons glyphicons-plus"></span>Tilføj et underspørgsmål</span>';
+	HTML += 		'</div>';
 
 					++titelIndex;
-	HTML += 		'<h2>'+titelIndex+'. Konklusion</h2>';
+	HTML += 		'<h2>'+titelIndex+'. Besvarelse af underspørgsmål</h2>';
+
+	HTML += 		'<div class="subQuestionWrapContainer">';
+						var savedValArr = [];
+						var placeholderTextArr = [];
+						for (var i in obj.subQuestions) {
+							// titelIndex = parseInt(i)+1;
+							var answers = obj.subQuestions[i].answers;
+							var numOfAns = answers.length;
+							var subQuestion = obj.subQuestions[i].subQuestion;
+							placeholderTextArr = Array(numOfAns+1).join('Skriv din besvarelse her...;').split(';');
+							placeholderTextArr.pop();
+							console.log('template - i: '+i+', subQuestion: ' + subQuestion+', placeholderTextArr: ' + JSON.stringify(placeholderTextArr)+', obj.subQuestions['+i+']: ' + JSON.stringify(obj.subQuestions[i]));
+	HTML += 				answersToSubQuestions(parseInt(i)+1, 'subQuestionAnswer starMark studentInput', subQuestion, answers, placeholderTextArr);
+						}
+	HTML += 		'</div>';
+
+					++titelIndex;
+	HTML += 		'<h2>'+titelIndex+'. Konklusion (ikke stikordsform)</h2>';
 	HTML += 		'<textarea id="conclusion" class="studentInput" value="'+obj.conclusion+'" placeholder="Skriv din konklusion her...">'+obj.conclusion+'</textarea>';
 
 					++titelIndex;
-	HTML += 		'<h2>'+titelIndex+'. Litteraturhenvisning</h2>';
-			for (var i in obj.bibliography) {
-	HTML += 		bibliography(parseInt(i)+1, obj.bibliography[i]);
-			};
+	HTML += 		'<h2>'+titelIndex+'. Oversigt over anvendt materiale</h2>';
+
+	HTML += 		'<h3>Det udleverede bilagsmateriale</h3>';
+	HTML += 		'<div class="bibMandatory">';
+						for (var i in obj.bibliography.mandatory) {
+	HTML += 				bibliography(parseInt(i)+1, obj.bibliography.mandatory[i]);
+						};
+	HTML += 		'</div>';
+	HTML += 		'<span id="addNewBibMandatory" class="btn btn-info"><span class="glyphicons glyphicons-plus"></span>Tilføj kilde</span>';
+
+	HTML += 		'<h3>De selvfundende bilag</h3>';
+	HTML += 		'<div class="bibOptional">';
+						for (var i in obj.bibliography.optional) {
+	HTML += 				bibliography(parseInt(i)+1, obj.bibliography.optional[i]);
+						};
+	HTML += 		'</div>';
+	HTML += 		'<span id="addNewBibOptional" class="btn btn-info"><span class="glyphicons glyphicons-plus"></span>Tilføj kilde</span>';
+
+	HTML += 		'<div class="clear"></div>';
 
 	HTML += 		'<span id="download" class="btn btn-lg btn-primary"><span class="glyphicons glyphicons-download-alt"></span> Download</span>';
 
@@ -192,36 +246,96 @@ function template() {
 	$('.starMark').before('<span class="glyphLi glyphicon glyphicon-asterisk"></span>');
 }
 
-function subQuestionsAndAnswers(indexNo, classes, savedSubQuestion, savedValArr, placeholderTextArr) {
+
+$( document ).on('click', "#addNewSubQuestion", function(event){
+	var numOfSubQuestions = $('.subQuestion').length;
+	$('.subQuestionInput').append(returnInputBoxes4(1, 'subQuestion starMark studentInput', '', replaceWildcard('Skriv dit ??? underspørgsmål her...', numOfSubQuestions+1)));
+	$('.subQuestionInput .starMark').last().before('<span class="glyphLi glyphicon glyphicon-asterisk"></span>');
+
+	$('.subQuestionWrapContainer').append(answersToSubQuestions(numOfSubQuestions+1, 'subQuestionAnswer starMark studentInput', '', [''], ['Skriv din besvarelse her...']));
+	$('.subQuestionWrapContainer .starMark').last().before('<span class="glyphLi glyphicon glyphicon-asterisk"></span>');
+});
+
+
+$( document ).on('click', "#addNewBibMandatory", function(event){
+	$('.bibMandatory').append(bibliography($('.bibMandatory .bibliographyWrap').length+1, {source:'',characterization:''}));
+});
+
+
+$( document ).on('click', "#addNewBibOptional", function(event){
+	$('.bibOptional').append(bibliography($('.bibOptional .bibliographyWrap').length+1, {source:'',characterization:''}));
+});
+
+
+function answersToSubQuestions(indexNo, classes, savedSubQuestion, savedValArr, placeholderTextArr) {
 	var HTML = '';
 	HTML += '<div class="subQuestionWrap">';
-	HTML += 	'<h2>'+indexNo+'. Underspørgsmål og besvarelser </h2>';
+	// HTML += 	'<h2>Underspørgsmål '+indexNo+'</h2>';
 	HTML += 	'<div class="textindent">';
-	HTML += 		'<h3>Underspørgsmål</h3>';
-	HTML += 		returnInputBoxes4(1, 'subQuestion studentInput', savedSubQuestion, replaceWildcard('Skriv dit ??? underspørgsmål her...',indexNo-1));
+	HTML += 		'<h3 class="subQuestionHeading">'+((savedSubQuestion.length > 0)?savedSubQuestion:'Underspørgsmål '+indexNo)+'</h3>';
 	HTML += 		'<h3>Besvarelser</h3>';
-	HTML += 		returnInputBoxes4(savedValArr.length, classes, savedValArr, placeholderTextArr);
+	HTML += 		'<div class="answerWrapContainer">';
+	HTML += 			returnInputBoxes4(savedValArr.length, classes, savedValArr, placeholderTextArr);
+	HTML += 		'</div>';
+	HTML += 		'<span class="addNewSubQuestionAnswer btn btn-info"><span class="glyphicons glyphicons-plus"></span>Tilføj en besvarelse</span>';
 	HTML += 	'</div>';
 	HTML += '</div>';
 	return HTML;
 }
 
 
+$( document ).on('click', ".addNewSubQuestionAnswer", function(event){
+	var parentObj = $(this).parent();
+	$('.answerWrapContainer', parentObj).append(returnInputBoxes4(1, 'subQuestionAnswer starMark studentInput', [''], ['Skriv din besvarelse her...']));
+	$('.answerWrapContainer .starMark', parentObj).last().before('<span class="glyphLi glyphicon glyphicon-asterisk"></span>');
+});
+
+
+// This keypress eventhandler listens for the press of the return-key. If a return-key event is encountered the 
+// first empty input-field is found and focus is given to that field.
+$( document ).on('keypress', ".subQuestionAnswer", function(event){
+	console.log("keypress - keyThemesByStudent - PRESSED");
+	if ( event.which == 13 ) {  // If a press on the return-key is encountered... (NOTE: "13" equals the "return" key)
+		event.preventDefault(); // ...prevents the normal action of the return-key. 
+		console.log("keypress - keyThemesByStudent - PRESSED RETURN");
+		if ($(this).val().length > 0){
+			// var parentObj = $(this).parent().parent().parent();             // <---- OK 
+			// $( ".addNewSubQuestionAnswer", parentObj ).trigger( "click" );  // <---- OK 
+
+			var parentObj = $(this).parent();
+			$(parentObj).after(returnInputBoxes4(1, 'subQuestionAnswer starMark studentInput', [''], ['Skriv din besvarelse her...']));
+			$(parentObj).next().prepend('<span class="glyphLi glyphicon glyphicon-asterisk"></span>');
+
+			$('.subQuestionAnswer', $(this).parent().next()).focus();
+		} else { // If the input-field is empty...
+			console.log("keypress - keyThemesByStudent - PRESSED");
+			$(this).focus(); // ...give the input-field focus...
+		} 
+	}
+});
+
+
+
+$( document ).on('keyup', ".subQuestion", function(event){  // "keyup" instead of "keypress" to detect the last keystroke.
+	console.log("keyup - subQuestion" );
+	var index = $(this).parent().index();
+	var txt = $(this).val();
+	console.log("keyup - subQuestion - index: " + index + ", txt: " + txt + ", $(this).parent().class: " + $(this).parent().attr('class'));
+	$('.subQuestionHeading').eq(index).text(txt);
+});
+
+
+
 function bibliography(indexNo, bibObj) {
 	var HTML = '';
 	HTML += '<div class="bibliographyWrap">';
-	// HTML += 	'<div class="textindent">';
+	HTML += 	'<div class="textindent">';
 	HTML += 		'<h3>Kilde '+indexNo+'</h3>';
-	HTML += 		'<div class="bootAjust">';
-	HTML += 			'<div class="bootL col-xs-12 col-md-4">'+returnInputBoxes4(1, 'author studentInputSmall', bibObj.author, 'Skriv forfatter her...')+'</div>';
-	HTML += 			'<div class="bootM col-xs-12 col-md-4">'+returnInputBoxes4(1, 'source studentInputSmall', bibObj.source, 'Skriv forlag her...')+'</div>';
-	HTML += 			'<div class="bootR col-xs-12 col-md-4">'+returnInputBoxes4(1, 'year studentInputSmall', bibObj.year, 'Skriv år her...')+'</div>';
-	HTML += 			returnInputBoxes4(1, 'title studentInput', bibObj.title, 'Skriv titel her...');
-	HTML += 		'</div>';
-	HTML += 		'<div class="clear"></div>';
-	HTML += 		'<h3>Karakteristik af materialet</h3>';
-	HTML += 		'<textarea class="characterization" value="'+bibObj.characterization+'" placeholder="Hvem er afsender? Hvad er det for en type kilde? Hvad er kildens vigtigste pointer/budskaber i forhold til problemformuleringen? Og er der vigtige kildekritiske overvejelser?">'+bibObj.characterization+'</textarea>';
-	// HTML += 	'</div>';
+	HTML += 		returnInputBoxes4(1, 'source studentInput', bibObj.source, 'Skriv kildens titel, afsender, datering, genre og modtager...');
+	// HTML += 		'<div class="clear"></div>';
+	// HTML += 		'<h3>Karakteristik af materialet</h3>';
+	HTML += 		'<textarea class="characterization" value="'+bibObj.characterization+'" placeholder="Skriv kildens vigtigste pointer/budskab i forhold til problemformuleringen - herunder eventuelle vigtige kildekritiske overvejelser">'+bibObj.characterization+'</textarea>';
+	HTML += 	'</div>';
 	HTML += '</div>';
 	return HTML;
 }
@@ -244,17 +358,24 @@ function returnInputBoxes4(numOfBoxes, Class, savedValues, placeholderText){  //
 
 
 function saveJsonData(){
-	jsonData.templateData = {titel: $('.studentTitel').val(), introduction: $('#introduction').val(), problemformulation: $('#problemformulation').val(), subQuestions: [], conclusion: $('#conclusion').val(), bibliography: []};
+	jsonData.templateData = {theme: $('.studentTheme').val(), introduction: $('#introduction').val(), problemformulation: $('#problemformulation').val(), subQuestions: [], conclusion: $('#conclusion').val(), bibliography:{mandatory:[], optional:[]}};
 	$( ".subQuestionWrap" ).each(function( index1, element1 ) {
-		var subObj = {subQuestion: $('.subQuestion',element1).val(), answers: []};
+		// var subObj = {subQuestion: $('.subQuestion',element1).val(), answers: []};  // subQuestionHeading
+		var subQuestionHeading = $('.subQuestionHeading',element1).text();
+		var subQuestionTxt = (subQuestionHeading.indexOf('Underspørgsmål ') === -1)?subQuestionHeading:'';
+		var subObj = {subQuestion: subQuestionTxt, answers: []};
 		$( ".subQuestionAnswer", element1 ).each(function( index2, element2 ) {
 			subObj.answers.push($(element2).val());
 		});
 		jsonData.templateData.subQuestions.push(subObj);
 	});
 
-	$( ".bibliographyWrap" ).each(function( index, element ) {
-		jsonData.templateData.bibliography.push({author: $('.author', element).val(), source: $('.source', element).val(), year: $('.year', element).val(), title: $('.title', element).val(), characterization:$('.characterization', element).val()});
+	$( ".bibMandatory .bibliographyWrap" ).each(function( index, element ) {
+		jsonData.templateData.bibliography.mandatory.push({source: $('.source', element).val(), characterization:$('.characterization', element).val()});
+	});
+
+	$( ".bibOptional .bibliographyWrap" ).each(function( index, element ) {
+		jsonData.templateData.bibliography.optional.push({source: $('.source', element).val(), characterization:$('.characterization', element).val()});
 	});
 
 	console.log('saveJsonData - jsonData.templateData: ' + JSON.stringify(jsonData.templateData)); 
@@ -276,7 +397,7 @@ $( document ).on('click', "#download", function(event){
 // This function replaces all "???" wildcards in strToReplace with the corrosponding "num" value translated into a string-word (between zero and twenty)
 function replaceWildcard(strToReplace, num){
 	// var numArray = ['nul','en','to','tre','fire','fem','seks','syv','otte','ni','ti','elleve','tolv','tretten','fjorten','femten','seksten','sytten','atten','nitten','tyve'];
-	var numArray = ['nul','første','anden','tredje','fjerde','femte','sjette','syvende','ottende','niende','tiende'];
+	var numArray = ['nul','første','andet','tredje','fjerde','femte','sjette','syvende','ottende','niende','tiende', 'ellevte', 'tolvte', 'trettende', 'fjortende', 'femtende', 'sekstende', 'syttende', 'attende', 'nittende', 'tyvende'];
 	var strArray = strToReplace.split(" ??? ");
 	if (num > numArray.length-1) {
 		return strArray.join(' '+String(num)+' ');
@@ -319,7 +440,7 @@ function wordTemplate() {
 	HTML += 		'</style>';
 	HTML += 	'</head>';
 	HTML += 	'<body>'; 
-	HTML += 		'<h1>'+obj.titel+'</h1>';
+	HTML += 		'<h1>'+obj.theme+'</h1>';
 
 	HTML += 		'<h3>Indledning</h3>';
 	HTML += 		'<p>'+obj.introduction+'</p>';
@@ -354,32 +475,41 @@ function wordTemplate() {
 	HTML += 		'<h3>Konklusion</h3>';
 	HTML += 		'<p>'+obj.conclusion+'</p>';
 
-	HTML += 		'<h3>Litteraturhenvisning</h3>';
-					for (var n in obj.bibliography){
-						var bibArr = [];
-						var bib = obj.bibliography[n];
-						if (bib.author.length > 0) bibArr.push(bib.author);
-						if (bib.source.length > 0) bibArr.push(bib.source);
-						if (bib.year.length > 0) bibArr.push(bib.year);
-						if (bib.title.length > 0) bibArr.push(bib.title);
+					var count = 1;
+	HTML += 		'<h3>Det udleverede bilagsmateriale</h3>';
+					for (var n in obj.bibliography.mandatory){
+						var bib = obj.bibliography.mandatory[n];
+	HTML += 			(bib.source.length > 0)?'<b>Kilde '+count+': </b>'+bib.source+'<br>':'';
+	HTML += 			(bib.characterization.length > 0)?'<b>Materialekarakteristik: </b>'+bib.characterization+'<br><br>':'';
+						if (bib.source.length > 0) {
+							++count
+						};
+					}
 
-	HTML += 			'<p>'+bibArr.join(', ')+'</p>';
-	HTML += 			(bib.characterization.length > 0)?'<b>Materialekarakteristik: </b>'+bib.characterization:'';
-
+					count = 1;
+	HTML += 		'<h3>De selvfundende bilag</h3>';
+					for (var n in obj.bibliography.optional){
+						var bib = obj.bibliography.optional[n];
+	HTML += 			(bib.source.length > 0)?'<b>Kilde '+count+': </b>'+bib.source+'<br>':'';
+	HTML += 			(bib.characterization.length > 0)?'<b>Materialekarakteristik: </b>'+bib.characterization+'<br><br>':'';
+						if (bib.source.length > 0) {
+							++count
+						};
 					}
 
 	HTML += 		'<h3>Tjekspørgsmål til problemformuleringen:</h3> '; 
 	HTML += 		'<table class="checkQuestion">';
-	HTML += 			'<tr><td><p><b>Rød tråd:</b> Hænger problemformulering og underspørgsmål sammen? Dvs. kan problemformuleringen besvares ved hjælp af underspørgsmålene? Og er der en sammenhæng mellem underspørgsmålene?</p>';
-	HTML += 			'<p><b>Taksonomi:</b> Lægger problemformuleringen op til undersøgelse, diskussion og vurdering - dvs. ikke kun til redegørelse?</p>';
-	HTML += 			'<p><b>Tværfaglighed:</b> Kan viden fra historie, religion og samfundsfag inddrages i den samlede besvarelse af problemformulering og underspørgsmål?</p></td></tr>';
+	HTML += 			'<tr><td><p><b>Rød tråd:</b> Hænger hoved- og underspørgsmål sammen? Dvs. besvares hovedspørgsmålet med underspørgsmålene? Og er der en sammenhæng mellem underspørgsmålene?</p>';
+	HTML += 			'<p><b>Taksonomi:</b> Lægger hovedspørgsmålet op til undersøgelse, diskussion og vurdering (ikke kun redegørelse)?</p>';
+	HTML += 			'<p><b>Anvendelse af materiale:</b> Lægger spørgsmålene op til at inddrage bilagene i besvarelsen?</p>';
+	HTML += 			'<p><b>Tværfaglighed:</b> Kan viden fra alle tre fag inddrages i besvarelsen af problemformuleringen?</p></td></tr>';
 	HTML += 		'</table>';
 
-	HTML += 		'<div class="spacer">&nbsp;</div>'
+	// HTML += 		'<div class="spacer">&nbsp;</div>'
 
-	HTML += 		'<table class="useMaterial">';
-	HTML += 			'<p><b>Anvendelse af materiale:</b> Til KS-eksamen er det vigtigt, at spørgsmålene også lægger op til at inddrage det udleverede materiale i besvarelsen!</p>';
-	HTML += 		'</table>';
+	// HTML += 		'<table class="useMaterial">';
+	// HTML += 			'<p><b>Anvendelse af materiale:</b> Til KS-eksamen er det vigtigt, at spørgsmålene også lægger op til at inddrage det udleverede materiale i besvarelsen!</p>';
+	// HTML += 		'</table>';
 
 	HTML += 	'</body>';
 	HTML += '</html>';
