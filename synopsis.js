@@ -401,15 +401,135 @@ function saveJsonData(){
 }
 
 
+function warnStudent(){
+	var JT = jsonData.templateData;
+	inputError = false;
+	var HTML = '';
+	// ERROR CHECK studentTheme:
+	if (($('.studentTheme').val().length == 0) && !inputError){
+		HTML = 'Der mangler et EMNE';  // studentTheme
+		inputError = true;
+	} 
+	// ERROR CHECK introduction:
+	if (($('#introduction').val().length == 0) && !inputError){
+		HTML = 'Der mangler en INTRODUKTION';  // introduction
+		inputError = true;
+	} 
+	// ERROR CHECK problemformulation:
+	if (($('#problemformulation').val().length == 0) && !inputError){
+		HTML = 'Der mangler en PROBLEMFORMULERING'; // problemformulation
+		inputError = true;
+	}
+	// ERROR CHECK subQuestions:
+	err_subQuestions = false;
+	if (!inputError){
+		var subQuestionsCount = 0;
+		for (var n in JT.subQuestions){
+			if (JT.subQuestions[n].subQuestion.length > 0) {
+				var notAnsweredSubQuestion = 0;
+				for (var m in JT.subQuestions[n].answers){
+					if (JT.subQuestions[n].answers[m].length == 0) ++notAnsweredSubQuestion;
+				}
+				if ((notAnsweredSubQuestion == JT.subQuestions[n].answers.length) && (!inputError)){
+					HTML += 'Du har lavet et eller flere underspørgsmål UDEN tilhørende besvarelser'; // subQuestions
+					inputError = true;
+				}
+				if (!inputError) {
+					++subQuestionsCount;
+				}
+			} else {   // <-------   THIS ERROR CHECK MIGHT NOT BE NECESSARY, AND CAN BE SAFELY REMOVED!!!  
+				var answerWhitoutSubQuestion = 0;
+				for (var m in JT.subQuestions[n].answers){
+					if (JT.subQuestions[n].answers[m].length > 0) ++answerWhitoutSubQuestion;
+				}
+				if ((answerWhitoutSubQuestion == JT.subQuestions[n].answers.length) && (!inputError)){
+					HTML += 'Du har lavet et eller flere besvarelser UDEN tilhørende et tilhørende underspørgsmål (har du besvarelser hvor der står "Underspørgsmål" i overskriften?)'; // subQuestions
+					inputError = true;
+				}
+			}
+		}
+		var subQuestions = 2;
+		if ((subQuestionsCount < subQuestions) && (!inputError)){
+			HTML += 'Du har kun angivet '+subQuestionsCount+' underspørgsmål - du skal som minimum have '+subQuestions+' underspørgsmål.'; 
+			inputError = true;
+		}
+	}
+	
+	// ERROR CHECK conclusion:
+	if (($('#conclusion').val().length == 0) && !inputError){
+		HTML = 'Der mangler en KONKLUSION'; // conclusion
+		inputError = true;
+	} 
+
+	// ERROR CHECK bibliography:
+	if (!inputError){
+		// ERROR CHECK mandatory:
+		var mandatorySourcesCount = 0;
+		for (var n in JT.bibliography.mandatory){   // {source:'' ,characterization:''}
+			if ((JT.bibliography.mandatory[n].source.length > 0) && (JT.bibliography.mandatory[n].characterization.length == 0) && (!inputError)){
+				HTML += 'Du har følgende fejl i det udleverede bilagsmateriale: Du har angivet en eller flere kilder UDEN at lave en tilhørende kildekarakteristik'; 
+				inputError = true;
+			}
+			if ((JT.bibliography.mandatory[n].source.length == 0) && (JT.bibliography.mandatory[n].characterization.length > 0) && (!inputError)){ // <-------   THIS ERROR CHECK MIGHT NOT BE NECESSARY, AND CAN BE SAFELY REMOVED!!!  
+				HTML += 'Du har følgende fejl i det udleverede bilagsmateriale: Du har lavet en eller flere kildekarakteristiker UDEN uden at angive en tilhørende kilde'; 
+				inputError = true;
+			}
+			if ((JT.bibliography.mandatory[n].source.length > 0) && (!inputError)) {
+				++mandatorySourcesCount;
+			}
+		}
+		var mandatorySources = 2;
+		if ((mandatorySourcesCount < mandatorySources) && (!inputError)){
+			HTML += 'Du har følgende fejl i det udleverede bilagsmateriale: Du har kun angivet '+mandatorySourcesCount+' udleveret bilagsmaterialer - du skal som minimum angive '+mandatorySources+' udleverede bilagsmaterialer.'; 
+			inputError = true;
+		}
+
+		// ERROR CHECK optional:
+		var optionalSourcesCount = 0;
+		for (var n in JT.bibliography.optional){   
+			if ((JT.bibliography.optional[n].source.length > 0) && (JT.bibliography.optional[n].characterization.length == 0) && (!inputError)){
+				HTML += 'Du har følgende fejl i det selvfundne bilagsmateriale: Du har angivet en eller flere kilder UDEN at lave en tilhørende kildekarakteristik'; 
+				inputError = true;
+			}
+			if ((JT.bibliography.optional[n].source.length == 0) && (JT.bibliography.optional[n].characterization.length > 0) && (!inputError)){ // <-------   THIS ERROR CHECK MIGHT NOT BE NECESSARY, AND CAN BE SAFELY REMOVED!!!  
+				HTML += 'Du har følgende fejl i det selvfundne bilagsmateriale: Du har lavet en eller flere kildekarakteristiker UDEN uden at angive en tilhørende kilde'; 
+				inputError = true;
+			}
+			if ((JT.bibliography.optional[n].source.length > 0) && (!inputError)) {
+				++optionalSourcesCount;
+			}
+		}
+		var optionalSources = 2;
+		if ((optionalSourcesCount < optionalSources) && (!inputError)){
+			HTML += 'Du har følgende fejl i det selvfundne bilagsmateriale: Du har kun angivet '+optionalSourcesCount+' selvfundne bilagsmaterialer - du skal som minimum angive '+optionalSources+' selvfundne bilagsmaterialer.'; 
+			inputError = true;
+		}
+	} 
+
+	if (inputError) {
+		UserMsgBox("body", '<h4>OBS</h4> <p>'+HTML+'</p>');
+	}
+
+	console.log('warnStudent - inputError: ' + inputError);
+
+	// introduction: $('#introduction').val(), problemformulation: $('#problemformulation').val(), subQuestions: [], conclusion: $('#conclusion').val(), bibliography:{mandatory:[], optional:[]}};
+
+	return inputError;
+}
+
+
 $( document ).on('click', "#download", function(event){
 
 	saveJsonData();
 
-	var HTML = wordTemplate();
+	if (!warnStudent()){
 
-	var converted = htmlDocx.asBlob(HTML);
-    console.log("download - converted: " + JSON.stringify(converted));
-	saveAs(converted, 'Min synopsis.docx');
+		var HTML = wordTemplate();
+
+		var converted = htmlDocx.asBlob(HTML);
+	    console.log("download - converted: " + JSON.stringify(converted));
+		saveAs(converted, 'Min synopsis.docx');
+	}
 });
 
 
