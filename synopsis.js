@@ -448,11 +448,11 @@ function warnStudent(){
 				}
 			}
 		}
-		var subQuestions = 2;
-		if ((subQuestionsCount < subQuestions) && (!inputError)){
-			HTML += 'Du har kun angivet '+subQuestionsCount+' underspørgsmål - du skal som minimum have '+subQuestions+' underspørgsmål.'; 
-			inputError = true;
-		}
+		// var subQuestions = 2;  // <--------------------------------  IMPORTANT NOTE: ATO does not think that a certain limit has to be set!
+		// if ((subQuestionsCount < subQuestions) && (!inputError)){
+		// 	HTML += 'Du har kun angivet '+subQuestionsCount+' underspørgsmål - du skal som minimum have '+subQuestions+' underspørgsmål.'; 
+		// 	inputError = true;
+		// }
 	}
 	
 	// ERROR CHECK conclusion:
@@ -478,11 +478,11 @@ function warnStudent(){
 				++mandatorySourcesCount;
 			}
 		}
-		var mandatorySources = 2;
-		if ((mandatorySourcesCount < mandatorySources) && (!inputError)){
-			HTML += 'Du har følgende fejl i det udleverede bilagsmateriale: Du har kun angivet '+mandatorySourcesCount+' udleveret bilagsmaterialer - du skal som minimum angive '+mandatorySources+' udleverede bilagsmaterialer.'; 
-			inputError = true;
-		}
+		// var mandatorySources = 2;  // <--------------------------------  IMPORTANT NOTE: ATO does not think that a certain limit has to be set!
+		// if ((mandatorySourcesCount < mandatorySources) && (!inputError)){
+		// 	HTML += 'Du har følgende fejl i det udleverede bilagsmateriale: Du har kun angivet '+mandatorySourcesCount+' udleveret bilagsmaterialer - du skal som minimum angive '+mandatorySources+' udleverede bilagsmaterialer.'; 
+		// 	inputError = true;
+		// }
 
 		// ERROR CHECK optional:
 		var optionalSourcesCount = 0;
@@ -499,11 +499,11 @@ function warnStudent(){
 				++optionalSourcesCount;
 			}
 		}
-		var optionalSources = 2;
-		if ((optionalSourcesCount < optionalSources) && (!inputError)){
-			HTML += 'Du har følgende fejl i det selvfundne bilagsmateriale: Du har kun angivet '+optionalSourcesCount+' selvfundne bilagsmaterialer - du skal som minimum angive '+optionalSources+' selvfundne bilagsmaterialer.'; 
-			inputError = true;
-		}
+		// var optionalSources = 2;  // <--------------------------------  IMPORTANT NOTE: ATO does not think that a certain limit has to be set!
+		// if ((optionalSourcesCount < optionalSources) && (!inputError)){
+		// 	HTML += 'Du har følgende fejl i det selvfundne bilagsmateriale: Du har kun angivet '+optionalSourcesCount+' selvfundne bilagsmaterialer - du skal som minimum angive '+optionalSources+' selvfundne bilagsmaterialer.'; 
+		// 	inputError = true;
+		// }
 	} 
 
 	if (inputError) {
