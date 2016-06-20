@@ -116,41 +116,9 @@ function template() {
 	var titelLetter = ['A','B','C','D','E','F','G','H','I','j','K'];
 	var HTML = '';
 
-	console.log('template - jsonData 1: ' + JSON.stringify(jsonData)); 
-
-	if (!jsonData.hasOwnProperty("templateData")){ 
-		console.log('template - templateData - NOT FOUND ');
-
-		jsonData.templateData = {theme: '', 
-    							introduction: '', 
-    							problemformulation: '', 
-    							subQuestions: [
-    								{subQuestion:'',answers:['']},
-    								{subQuestion:'',answers:['']},
-    								{subQuestion:'',answers:['']},
-    								{subQuestion:'',answers:['']}
-    							], 
-    							conclusion: '',
-    							bibliography: {
-    								mandatory: [
-    									{source:'' ,characterization:''},
-    									{source:'' ,characterization:''},
-    									{source:'' ,characterization:''},
-    									{source:'' ,characterization:''},
-    									{source:'' ,characterization:''}
-    								],
-    								optional: [
-    									{source:'' ,characterization:''},
-    									{source:'' ,characterization:''}
-    								]
-    							}
-    						};
-    }
+	console.log('template - jsonData: ' + JSON.stringify(jsonData)); 
 
     var obj = jsonData.templateData;
-
-    console.log('template - jsonData 2: ' + JSON.stringify(jsonData)); 
-
 
 	HTML += '<h1>'+jsonData.mainHeader+'</h1>';
 	HTML += '<div class="col-xs-12 col-md-8">'+instruction(jsonData.instruction)+'</div><div class="clear"></div>';
@@ -215,10 +183,10 @@ function template() {
 
 					++titelIndex;
 	HTML += 		'<h2>'+titelLetter[titelIndex]+'. Konklusion</h2>';
-	// HTML += 		'<p>';
-	// HTML += 			'Du skal skrive konklusionen som en sammenhængende tekst - ikke i stikordsform.';
-	// HTML += 		'</p>';
-	HTML += 		'<textarea id="conclusion" class="studentInput" value="'+obj.conclusion+'" placeholder="Besvar din problemformulering ved hjælp af en opsummering af dine svar på de enkelte underspørgsmål. Du skal skrive konklusionen som en sammenhængende tekst - ikke i stikordsform.">'+obj.conclusion+'</textarea>';
+	HTML += 		'<div class="textindent">';
+	HTML += 			'<p>Besvar din problemformulering ved hjælp af en opsummering af dine svar på de enkelte underspørgsmål. Du skal skrive konklusionen som en sammenhængende tekst - ikke i stikordsform.</p>';
+	HTML += 			'<textarea id="conclusion" class="studentInput" value="'+obj.conclusion+'" placeholder="Besvar din problemformulering ved hjælp af en opsummering af dine svar på de enkelte underspørgsmål. Du skal skrive konklusionen som en sammenhængende tekst - ikke i stikordsform.">'+obj.conclusion+'</textarea>';
+	HTML += 		'</div>';
 
 					++titelIndex;
 	HTML += 		'<h2>'+titelLetter[titelIndex]+'. Oversigt over anvendt materiale</h2>';
@@ -420,40 +388,40 @@ function warnStudent(){
 		HTML = 'Der mangler en PROBLEMFORMULERING'; // problemformulation
 		inputError = true;
 	}
-	// ERROR CHECK subQuestions:
-	err_subQuestions = false;
-	if (!inputError){
-		var subQuestionsCount = 0;
-		for (var n in JT.subQuestions){
-			if (JT.subQuestions[n].subQuestion.length > 0) {
-				var notAnsweredSubQuestion = 0;
-				for (var m in JT.subQuestions[n].answers){
-					if (JT.subQuestions[n].answers[m].length == 0) ++notAnsweredSubQuestion;
-				}
-				if ((notAnsweredSubQuestion == JT.subQuestions[n].answers.length) && (!inputError)){
-					HTML += 'Du har lavet et eller flere underspørgsmål UDEN tilhørende besvarelser'; // subQuestions
-					inputError = true;
-				}
-				if (!inputError) {
-					++subQuestionsCount;
-				}
-			} else {   // <-------   THIS ERROR CHECK MIGHT NOT BE NECESSARY, AND CAN BE SAFELY REMOVED!!!  
-				var answerWhitoutSubQuestion = 0;
-				for (var m in JT.subQuestions[n].answers){
-					if (JT.subQuestions[n].answers[m].length > 0) ++answerWhitoutSubQuestion;
-				}
-				if ((answerWhitoutSubQuestion == JT.subQuestions[n].answers.length) && (!inputError)){
-					HTML += 'Du har lavet et eller flere besvarelser UDEN tilhørende et tilhørende underspørgsmål (har du besvarelser hvor der står "Underspørgsmål" i overskriften?)'; // subQuestions
-					inputError = true;
-				}
-			}
-		}
-		// var subQuestions = 2;  // <--------------------------------  IMPORTANT NOTE: ATO does not think that a certain limit has to be set!
-		// if ((subQuestionsCount < subQuestions) && (!inputError)){
-		// 	HTML += 'Du har kun angivet '+subQuestionsCount+' underspørgsmål - du skal som minimum have '+subQuestions+' underspørgsmål.'; 
-		// 	inputError = true;
-		// }
-	}
+	// // ERROR CHECK subQuestions:  // <------------  COMMENTED OUT 20/6-2016: TLY does not want error check here for UX reasons.
+	// err_subQuestions = false;
+	// if (!inputError){  
+	// 	var subQuestionsCount = 0;
+	// 	for (var n in JT.subQuestions){
+	// 		if (JT.subQuestions[n].subQuestion.length > 0) {
+	// 			var notAnsweredSubQuestion = 0;
+	// 			for (var m in JT.subQuestions[n].answers){
+	// 				if (JT.subQuestions[n].answers[m].length == 0) ++notAnsweredSubQuestion;
+	// 			}
+	// 			if ((notAnsweredSubQuestion == JT.subQuestions[n].answers.length) && (!inputError)){
+	// 				HTML += 'Du har lavet et eller flere underspørgsmål UDEN tilhørende besvarelser'; // subQuestions
+	// 				inputError = true;
+	// 			}
+	// 			if (!inputError) {
+	// 				++subQuestionsCount;
+	// 			}
+	// 		} else {   // <-------   THIS ERROR CHECK MIGHT NOT BE NECESSARY, AND CAN BE SAFELY REMOVED!!!  
+	// 			var answerWhitoutSubQuestion = 0;
+	// 			for (var m in JT.subQuestions[n].answers){
+	// 				if (JT.subQuestions[n].answers[m].length > 0) ++answerWhitoutSubQuestion;
+	// 			}
+	// 			if ((answerWhitoutSubQuestion == JT.subQuestions[n].answers.length) && (!inputError)){
+	// 				HTML += 'Du har lavet et eller flere besvarelser UDEN tilhørende et tilhørende underspørgsmål (har du besvarelser hvor der står "Underspørgsmål" i overskriften?)'; // subQuestions
+	// 				inputError = true;
+	// 			}
+	// 		}
+	// 	}
+	// 	// var subQuestions = 2;  // <--------------------------------  IMPORTANT NOTE: ATO does not think that a certain limit has to be set!
+	// 	// if ((subQuestionsCount < subQuestions) && (!inputError)){
+	// 	// 	HTML += 'Du har kun angivet '+subQuestionsCount+' underspørgsmål - du skal som minimum have '+subQuestions+' underspørgsmål.'; 
+	// 	// 	inputError = true;
+	// 	// }
+	// }
 	
 	// ERROR CHECK conclusion:
 	if (($('#conclusion').val().length == 0) && !inputError){
@@ -461,50 +429,50 @@ function warnStudent(){
 		inputError = true;
 	} 
 
-	// ERROR CHECK bibliography:
-	if (!inputError){
-		// ERROR CHECK mandatory:
-		var mandatorySourcesCount = 0;
-		for (var n in JT.bibliography.mandatory){   // {source:'' ,characterization:''}
-			if ((JT.bibliography.mandatory[n].source.length > 0) && (JT.bibliography.mandatory[n].characterization.length == 0) && (!inputError)){
-				HTML += 'Du har følgende fejl i det udleverede bilagsmateriale: Du har angivet en eller flere kilder UDEN at lave en tilhørende kildekarakteristik'; 
-				inputError = true;
-			}
-			if ((JT.bibliography.mandatory[n].source.length == 0) && (JT.bibliography.mandatory[n].characterization.length > 0) && (!inputError)){ // <-------   THIS ERROR CHECK MIGHT NOT BE NECESSARY, AND CAN BE SAFELY REMOVED!!!  
-				HTML += 'Du har følgende fejl i det udleverede bilagsmateriale: Du har lavet en eller flere kildekarakteristiker UDEN uden at angive en tilhørende kilde'; 
-				inputError = true;
-			}
-			if ((JT.bibliography.mandatory[n].source.length > 0) && (!inputError)) {
-				++mandatorySourcesCount;
-			}
-		}
-		// var mandatorySources = 2;  // <--------------------------------  IMPORTANT NOTE: ATO does not think that a certain limit has to be set!
-		// if ((mandatorySourcesCount < mandatorySources) && (!inputError)){
-		// 	HTML += 'Du har følgende fejl i det udleverede bilagsmateriale: Du har kun angivet '+mandatorySourcesCount+' udleveret bilagsmaterialer - du skal som minimum angive '+mandatorySources+' udleverede bilagsmaterialer.'; 
-		// 	inputError = true;
-		// }
+	// // ERROR CHECK bibliography:  // <------------  COMMENTED OUT 20/6-2016: TLY does not want error check here for UX reasons.
+	// if (!inputError){ 
+	// 	// ERROR CHECK mandatory:
+	// 	var mandatorySourcesCount = 0;
+	// 	for (var n in JT.bibliography.mandatory){   // {source:'' ,characterization:''}
+	// 		if ((JT.bibliography.mandatory[n].source.length > 0) && (JT.bibliography.mandatory[n].characterization.length == 0) && (!inputError)){
+	// 			HTML += 'Du har følgende fejl i det udleverede bilagsmateriale: Du har angivet en eller flere kilder UDEN at lave en tilhørende kildekarakteristik'; 
+	// 			inputError = true;
+	// 		}
+	// 		if ((JT.bibliography.mandatory[n].source.length == 0) && (JT.bibliography.mandatory[n].characterization.length > 0) && (!inputError)){ // <-------   THIS ERROR CHECK MIGHT NOT BE NECESSARY, AND CAN BE SAFELY REMOVED!!!  
+	// 			HTML += 'Du har følgende fejl i det udleverede bilagsmateriale: Du har lavet en eller flere kildekarakteristiker UDEN uden at angive en tilhørende kilde'; 
+	// 			inputError = true;
+	// 		}
+	// 		if ((JT.bibliography.mandatory[n].source.length > 0) && (!inputError)) {
+	// 			++mandatorySourcesCount;
+	// 		}
+	// 	}
+	// 	// var mandatorySources = 2;  // <--------------------------------  IMPORTANT NOTE: ATO does not think that a certain limit has to be set!
+	// 	// if ((mandatorySourcesCount < mandatorySources) && (!inputError)){
+	// 	// 	HTML += 'Du har følgende fejl i det udleverede bilagsmateriale: Du har kun angivet '+mandatorySourcesCount+' udleveret bilagsmaterialer - du skal som minimum angive '+mandatorySources+' udleverede bilagsmaterialer.'; 
+	// 	// 	inputError = true;
+	// 	// }
 
-		// ERROR CHECK optional:
-		var optionalSourcesCount = 0;
-		for (var n in JT.bibliography.optional){   
-			if ((JT.bibliography.optional[n].source.length > 0) && (JT.bibliography.optional[n].characterization.length == 0) && (!inputError)){
-				HTML += 'Du har følgende fejl i det selvfundne bilagsmateriale: Du har angivet en eller flere kilder UDEN at lave en tilhørende kildekarakteristik'; 
-				inputError = true;
-			}
-			if ((JT.bibliography.optional[n].source.length == 0) && (JT.bibliography.optional[n].characterization.length > 0) && (!inputError)){ // <-------   THIS ERROR CHECK MIGHT NOT BE NECESSARY, AND CAN BE SAFELY REMOVED!!!  
-				HTML += 'Du har følgende fejl i det selvfundne bilagsmateriale: Du har lavet en eller flere kildekarakteristiker UDEN uden at angive en tilhørende kilde'; 
-				inputError = true;
-			}
-			if ((JT.bibliography.optional[n].source.length > 0) && (!inputError)) {
-				++optionalSourcesCount;
-			}
-		}
-		// var optionalSources = 2;  // <--------------------------------  IMPORTANT NOTE: ATO does not think that a certain limit has to be set!
-		// if ((optionalSourcesCount < optionalSources) && (!inputError)){
-		// 	HTML += 'Du har følgende fejl i det selvfundne bilagsmateriale: Du har kun angivet '+optionalSourcesCount+' selvfundne bilagsmaterialer - du skal som minimum angive '+optionalSources+' selvfundne bilagsmaterialer.'; 
-		// 	inputError = true;
-		// }
-	} 
+	// 	// ERROR CHECK optional:
+	// 	var optionalSourcesCount = 0;
+	// 	for (var n in JT.bibliography.optional){   
+	// 		if ((JT.bibliography.optional[n].source.length > 0) && (JT.bibliography.optional[n].characterization.length == 0) && (!inputError)){
+	// 			HTML += 'Du har følgende fejl i det selvfundne bilagsmateriale: Du har angivet en eller flere kilder UDEN at lave en tilhørende kildekarakteristik'; 
+	// 			inputError = true;
+	// 		}
+	// 		if ((JT.bibliography.optional[n].source.length == 0) && (JT.bibliography.optional[n].characterization.length > 0) && (!inputError)){ // <-------   THIS ERROR CHECK MIGHT NOT BE NECESSARY, AND CAN BE SAFELY REMOVED!!!  
+	// 			HTML += 'Du har følgende fejl i det selvfundne bilagsmateriale: Du har lavet en eller flere kildekarakteristiker UDEN uden at angive en tilhørende kilde'; 
+	// 			inputError = true;
+	// 		}
+	// 		if ((JT.bibliography.optional[n].source.length > 0) && (!inputError)) {
+	// 			++optionalSourcesCount;
+	// 		}
+	// 	}
+	// 	// var optionalSources = 2;  // <--------------------------------  IMPORTANT NOTE: ATO does not think that a certain limit has to be set!
+	// 	// if ((optionalSourcesCount < optionalSources) && (!inputError)){
+	// 	// 	HTML += 'Du har følgende fejl i det selvfundne bilagsmateriale: Du har kun angivet '+optionalSourcesCount+' selvfundne bilagsmaterialer - du skal som minimum angive '+optionalSources+' selvfundne bilagsmaterialer.'; 
+	// 	// 	inputError = true;
+	// 	// }
+	// } 
 
 	if (inputError) {
 		UserMsgBox("body", '<h4>OBS</h4> <p>'+HTML+'</p>');

@@ -1,4 +1,29 @@
 {
 	"mainHeader" : "HJÆLP TIL SYNOPSISARBEJDET",
-	"instruction" : "Du får hjælp til at udarbejde en synopsis ved at udfylde felterne i denne skabelon. Når du er færdig med dit arbejde, kan du downloade din synopsis som et worddokument."
+	"instruction" : "Du får hjælp til at udarbejde en synopsis ved at udfylde felterne i denne skabelon. Når du er færdig med dit arbejde, kan du downloade din synopsis som et worddokument.",
+	"templateData": {
+		"theme": "", 
+        "introduction": "", 
+        "problemformulation": "", 
+        "subQuestions": [
+            {"subQuestion":"","answers":[""]},
+            {"subQuestion":"","answers":[""]},
+            {"subQuestion":"","answers":[""]},
+            {"subQuestion":"","answers":[""]}
+        ], 
+        "conclusion": "",
+        "bibliography": {
+            "mandatory": [
+                {"source":"" ,"characterization":""},
+                {"source":"" ,"characterization":""},
+                {"source":"" ,"characterization":""},
+                {"source":"" ,"characterization":""},
+                {"source":"" ,"characterization":""}
+            ],
+            "optional": [
+                {"source":"" ,"characterization":""},
+                {"source":"" ,"characterization":""}
+            ]
+        }
+    }
 }
