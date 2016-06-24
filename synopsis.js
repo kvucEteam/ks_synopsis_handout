@@ -369,6 +369,7 @@ function saveJsonData(){
 }
 
 
+
 function warnStudent(){
 	var JT = jsonData.templateData;
 	inputError = false;
@@ -625,23 +626,63 @@ function wordTemplate() {
 }
 
 
+function dataHasBeenEntered() {
+	var JT = jsonData.templateData;
+	
+	if (JT.theme.length > 0) {return true;} 
+	if (JT.introduction.length > 0) {return true;} 
+	if (JT.problemformulation.length > 0) {return true;}
+	if (JT.conclusion.length > 0) {return true;} 
+
+	
+	for (var n in JT.subQuestions){
+		if (JT.subQuestions[n].subQuestion.length > 0) {
+			return true;
+		}
+		for (var m in JT.subQuestions[n].answers){
+			if (JT.subQuestions[n].answers[m].length > 0) {
+				return true;
+			}
+		}
+	}
+
+	for (var n in JT.bibliography.mandatory){   
+		if (JT.bibliography.mandatory[n].source.length > 0) {return true;} 
+		if (JT.bibliography.mandatory[n].characterization.length > 0) {return true;} 
+	} 
+
+	for (var n in JT.bibliography.optional){   
+		if (JT.bibliography.optional[n].source.length > 0) {return true;} 
+		if (JT.bibliography.optional[n].characterization.length > 0) {return true;} 
+	}
+	
+	return false;
+}
+
+
 
 $( document ).on('focusout', "textarea", function(event){ 
 	saveJsonData();
-	osc.save('jsonData', jsonData);
+	if (dataHasBeenEntered()) {
+		osc.save('jsonData', jsonData);
+	}
 	console.log('focusout - textarea - jsonData: ' + JSON.stringify(jsonData));
 });
 
 $( document ).on('focusout', "input", function(event){
 	saveJsonData();
-	osc.save('jsonData', jsonData);
+	if (dataHasBeenEntered()) {
+		osc.save('jsonData', jsonData);
+	}
 	console.log('focusout - input - jsonData: ' + JSON.stringify(jsonData));
 });
 
 
 $( window ).unload(function() {   // <---------------  This saves data if the page is closed or reloaded.
 	saveJsonData();
-	osc.save('jsonData', jsonData);
+	if (dataHasBeenEntered()) {
+		osc.save('jsonData', jsonData);
+	}
 	console.log('unload - jsonData: ' + JSON.stringify(jsonData));
 	// confirm('unload - jsonData: ' + JSON.stringify(jsonData));
 });
