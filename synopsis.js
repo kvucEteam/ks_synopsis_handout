@@ -210,6 +210,7 @@ function template() {
 	HTML += 		'<div class="clear"></div>';
 
 	HTML += 		'<span id="download" class="btn btn-lg btn-primary"><span class="glyphicons glyphicons-download-alt"></span> Download</span>';
+	HTML += 		'<span id="copy" class="btn btn-lg btn-primary"><span class="glyphicons glyphicons-notes-2"></span>Kopier</span>';
 
 	HTML += 	'</div>';
 	HTML += '</div>';
@@ -502,6 +503,22 @@ $( document ).on('click', "#download", function(event){
 });
 
 
+$( document ).on('click', "#copy", function(event){
+
+	saveJsonData();
+
+	if (!warnStudent()){
+
+		var HTML = wordTemplate();
+
+		// Inspiration for the following solution: http://stackoverflow.com/questions/11965087/open-a-new-tab-window-and-write-something-to-it
+		var newTab = window.open("data:text/html," + encodeURIComponent(HTML), "_blank");
+		newTab.focus();
+	}
+
+});
+
+
 // This function replaces all "???" wildcards in strToReplace with the corrosponding "num" value translated into a string-word (between zero and twenty)
 function replaceWildcard(strToReplace, num){
 	// var numArray = ['nul','en','to','tre','fire','fem','seks','syv','otte','ni','ti','elleve','tolv','tretten','fjorten','femten','seksten','sytten','atten','nitten','tyve'];
@@ -529,7 +546,7 @@ function wordTemplate() {
 	HTML += 	'<head>';
 	HTML += 	'<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />';  // Fixes issue with danish characters on Internet Explore 
 	HTML += 		'<style type="text/css">';
-	HTML += 			'body {font-family: arial}';
+	HTML += 			'body {font-family: arial; padding: 50px;}';
 	HTML += 			'h1 {}';
 	HTML += 			'h2 {}';
 	HTML += 			'h3 {color: #333}';
@@ -605,9 +622,8 @@ function wordTemplate() {
 						};
 					}
 
-	HTML += 		'<h3>Tjekspørgsmål til problemformuleringen:</h3> '; 
 	HTML += 		'<table class="checkQuestion">';
-	HTML += 			'<tr><td><p><b>Rød tråd:</b> Hænger hoved- og underspørgsmål sammen? Dvs. besvares hovedspørgsmålet med underspørgsmålene? Og er der en sammenhæng mellem underspørgsmålene?</p>';
+	HTML += 			'<tr><td><h3 style="margin: 0px; padding: 0px;">Tjekspørgsmål til problemformuleringen:</h3><p><b>Rød tråd:</b> Hænger hoved- og underspørgsmål sammen? Dvs. besvares hovedspørgsmålet med underspørgsmålene? Og er der en sammenhæng mellem underspørgsmålene?</p>';
 	HTML += 			'<p><b>Taksonomi:</b> Lægger hovedspørgsmålet op til undersøgelse, diskussion og vurdering (ikke kun redegørelse)?</p>';
 	HTML += 			'<p><b>Tværfaglighed:</b> Kan viden fra alle tre fag inddrages i besvarelsen af problemformuleringen?</p>';
 	HTML += 			'<p><b>Anvendelse af materiale:</b> Lægger spørgsmålene op til at inddrage bilagene i besvarelsen?</p></td></tr>';
