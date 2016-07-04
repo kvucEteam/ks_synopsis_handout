@@ -163,7 +163,7 @@ function template() {
 					++titelIndex;
 	HTML += 		'<h2>'+titelLetter[titelIndex]+'. Besvarelse af underspørgsmål</h2>';
 	HTML += 		'<div class="textindent">';
-	HTML += 			'Du skal besvare dine underspørgsmål ved hjælp af viden fra de 3 fag og ved hjælp af inddragelse af bilagsmaterialet!';
+	HTML += 			'Du skal besvare dine underspørgsmål ved hjælp af viden fra de 3 fag og ved at inddrage bilagsmaterialet.';
 	HTML += 		'</div>';
 
 	HTML += 		'<div class="subQuestionWrapContainer">';
@@ -185,7 +185,7 @@ function template() {
 	HTML += 		'<h2>'+titelLetter[titelIndex]+'. Konklusion</h2>';
 	HTML += 		'<div class="textindent">';
 	HTML += 			'<p>Besvar din problemformulering ved hjælp af en opsummering af dine svar på de enkelte underspørgsmål. Du skal skrive konklusionen som en sammenhængende tekst - ikke i stikordsform.</p>';
-	HTML += 			'<textarea id="conclusion" class="studentInput" value="'+obj.conclusion+'" placeholder="Besvar din problemformulering ved hjælp af en opsummering af dine svar på de enkelte underspørgsmål. Du skal skrive konklusionen som en sammenhængende tekst - ikke i stikordsform.">'+obj.conclusion+'</textarea>';
+	HTML += 			'<textarea id="conclusion" class="studentInput" value="'+obj.conclusion+'" placeholder="Skriv din konklusion her...">'+obj.conclusion+'</textarea>';
 	HTML += 		'</div>';
 
 					++titelIndex;
