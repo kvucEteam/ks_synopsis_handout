@@ -322,7 +322,7 @@ function bibliography(indexNo, bibObj) {
 	HTML += 		returnInputBoxes4(1, 'source studentInput', bibObj.source, 'Skriv kildens titel, afsender, datering, genre og modtager...');
 	// HTML += 		'<div class="clear"></div>';
 	// HTML += 		'<h3>Karakteristik af materialet</h3>';
-	HTML += 		'<textarea class="characterization" value="'+bibObj.characterization+'" placeholder="Skriv kildens vigtigste pointer/budskab i forhold til problemformuleringen - herunder eventuelle vigtige kildekritiske overvejelser">'+bibObj.characterization+'</textarea>';
+	HTML += 		'<textarea class="characterization studentInput" value="'+bibObj.characterization+'" placeholder="Skriv kildens vigtigste pointer/budskab i forhold til problemformuleringen - herunder eventuelle vigtige kildekritiske overvejelser">'+bibObj.characterization+'</textarea>';
 	HTML += 	'</div>';
 	HTML += '</div>';
 	return HTML;
@@ -644,6 +644,8 @@ function wordTemplate() {
 
 function dataHasBeenEntered() {
 	var JT = jsonData.templateData;
+
+	console.log('dataHasBeenEntered - JT: ' + JT);
 	
 	if (JT.theme.length > 0) {return true;} 
 	if (JT.introduction.length > 0) {return true;} 
@@ -676,6 +678,39 @@ function dataHasBeenEntered() {
 }
 
 
+function detectBootstrapBreakpoints(){
+    if (typeof(bootstrapBreakpointSize) === 'undefined') {
+        console.log('detectBootstrapBreakpoints - bootstrapBreakpointSize defined.');
+        window.bootstrapBreakpointSize = null;
+        window.bootstrapcolObj = {xs:0,sm:1,md:2,lg:3};
+    }
+
+    $(document).ready(function() {
+        console.log('detectBootstrapBreakpoints - document.ready.');
+        $('body').append('<div id="bootstrapBreakpointWrapper"> <span class="visible-xs-block"> </span> <span class="visible-sm-block"></span> <span class="visible-md-block"> </span> <span class="visible-lg-block"> </span> </div>');
+        bootstrapBreakpointSize = $( "#bootstrapBreakpointWrapper>span:visible" ).prop('class').split('-')[1];
+        console.log('detectBootstrapBreakpoints - bootstrapBreakpointSize: ' + bootstrapBreakpointSize);
+    });
+
+    $(window).on('resize', function () {
+        console.log('detectBootstrapBreakpoints - window.resize.');
+        bootstrapBreakpointSize = $( "#bootstrapBreakpointWrapper>span:visible" ).prop('class').split('-')[1];
+        console.log('detectBootstrapBreakpoints - bootstrapBreakpointSize: ' + bootstrapBreakpointSize + ', typeof(bootstrapBreakpointSize): ' + typeof(bootstrapBreakpointSize));
+    });
+}
+
+
+function reduceInputWidth() {
+	console.log('reduceInputWidth - CALLED');
+	if (bootstrapcolObj[bootstrapBreakpointSize] <= bootstrapcolObj['sm']) {
+		$('.studentInput').addClass('reduceWidth');
+		console.log('reduceInputWidth - ON');
+	} else {
+		$('.studentInput').removeClass('reduceWidth');
+		console.log('reduceInputWidth - OFF');
+	}
+}
+
 
 $( document ).on('focusout', "textarea", function(event){ 
 	saveJsonData();
@@ -705,15 +740,36 @@ $( window ).unload(function() {   // <---------------  This saves data if the pa
 
 
 
+$( document ).on('click', ".UserMsgBox_previous", function(event){  // Part of the rotateCheck / returnLastStudentSession soluton
+	returnLastStudentSession();
+});
 
-$(window).on('resize', function() {
+$( document ).on('click', ".MsgBox_bgr_previous", function(event){  // Part of the rotateCheck / returnLastStudentSession soluton
+	returnLastStudentSession();
 });
 
 
+
+$(window).on('resize', function() {
+	reduceInputWidth();
+});
+
+detectBootstrapBreakpoints();
+
 $(document).ready(function() {
 
-	returnLastStudentSession();
+	rotateCheck();
+
+	if ($('#UserMsgBox').length > 0) {  // Detects wether or not rotateCheck() has placed a UserMsgBox or not:
+		console.log('UserMsgBox - DETECTED');
+		$('#UserMsgBox').addClass('UserMsgBox_previous');
+		$('.MsgBox_bgr').addClass('MsgBox_bgr_previous');
+	} else {
+		returnLastStudentSession();
+	}
 
 	template();
+
+	reduceInputWidth();
 	
 });

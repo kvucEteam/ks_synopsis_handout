@@ -89,3 +89,8 @@ textarea {
 .glyphicons-notes-2 {
     margin-right: 4px;
 }
+
+.reduceWidth{
+	max-width: 83%;
+}
+
