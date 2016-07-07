@@ -94,3 +94,18 @@ textarea {
 	max-width: 83%;
 }
 
+
+/*****************************************/
+
+#wordOutput {padding: 50px;}
+#wordOutput h1 {margin-top: 0px; margin-left: 0px;}
+#wordOutput h3 {color: #333}
+#wordOutput h4 {color: #56bfc5}
+#wordOutput .selected {color: #56bfc5; width: 25%}
+#wordOutput p {font-size: 1.2em; margin-bottom: 5px}
+#wordOutput table {width:95%; margin-left:12px}
+#wordOutput td {padding:10px 10px 10px 10px}
+#wordOutput ol {color: #000}
+#wordOutput .checkQuestion{background-color: #acefed; padding: 10px 10px 10px 10px; margin-bottom: 25px}
+#wordOutput .useMaterial{background-color: #d2d4ec; padding: 10px 10px 10px 10px; margin-bottom: 25px}
+#wordOutput .innerSpacer{margin: 10px}
