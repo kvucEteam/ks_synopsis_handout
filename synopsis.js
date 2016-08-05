@@ -121,7 +121,7 @@ function template() {
     var obj = jsonData.templateData;
 
 	HTML += '<h1>'+jsonData.mainHeader+'</h1>';
-	HTML += '<div class="col-xs-12 col-md-8">'+instruction(jsonData.instruction)+'</div><div class="clear"></div>';
+	HTML += '<div>'+instruction(jsonData.instruction)+'</div><div class="clear"></div>';
 	HTML += '<div class="row">';
 	HTML += 	'<div class="col-xs-12 col-md-12">';
 	HTML += 		'<h2>'+titelLetter[titelIndex]+'. Emne og indledning</h2>';
