@@ -126,7 +126,7 @@ function template() {
 	HTML += '<h1>'+jsonData.mainHeader+'</h1>';
 	HTML += '<div>'+instruction(jsonData.instruction)+'</div><div class="clear"></div>';
 	HTML += '<div class="row">';
-	HTML += 	'<div class="col-xs-12 col-md-12">';
+	// HTML += 	'<div class="col-xs-12 col-md-12">';  // Commented out 9/11-2016
 	HTML += 		'<h2>'+titelLetter[titelIndex]+'. Emne og indledning</h2>';
 	// HTML += 		'<h2>Titel, indledning og problemformulering</h2>';
 	HTML += 		'<div class="textindent">';
@@ -215,7 +215,7 @@ function template() {
 	HTML += 		'<span id="download" class="btn btn-lg btn-primary"><span class="glyphicons glyphicons-download-alt"></span> Download</span>';
 	HTML += 		'<span id="copy" class="btn btn-lg btn-primary"><span class="glyphicons glyphicons-notes-2"></span>Kopier</span>';
 
-	HTML += 	'</div>';
+	// HTML += 	'</div>';  // Commented out 9/11-2016
 	HTML += '</div>';
 
 	// HTML += 	returnInputBoxes4(5, 'XkeyThemesByStudent', [1,2,3,4,5], ['Saved val 1', 'Saved val 2', 'Saved val 3', 'Saved val 4', 'Saved val 5']);
