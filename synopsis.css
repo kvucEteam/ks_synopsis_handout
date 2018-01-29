@@ -94,6 +94,10 @@ textarea {
 	max-width: 83%;
 }
 
+#submit {
+    display: none;
+}
+
 
 /*****************************************/
 
