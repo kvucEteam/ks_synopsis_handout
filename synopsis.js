@@ -512,7 +512,7 @@ function warnStudent(){
 function download() {  
 	var HTML = '';
 	HTML += '<form action="htmlToWord.php" method="post">';
-    HTML += 	'<input type="hidden" name="fileName" id="hiddenField" value="Min introducerende artikel" />';
+    HTML += 	'<input type="hidden" name="fileName" id="hiddenField" value="Min synopsis" />';
     HTML += 	'<input id="html" type="hidden" name="html" id="hiddenField" />';
     HTML += 	'<input id="submit" type="submit" class="btn btn-info" value="Konverter" onclick="clearInterval(downloadTimer);">';  // <---- NOTE: The "downloadTimer" is cleared here!
     HTML += '</form>';
